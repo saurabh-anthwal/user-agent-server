@@ -8,6 +8,8 @@ from accounts.models import User
 class Agent(models.Model):
     agent_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, null=False)
+    imageUrl = models.URLField(max_length=2000, null=True, blank=True)
+    redirectUrl = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
     prompt_template = models.TextField(null=False)
     prompt_template2 = models.TextField(null=False)
@@ -32,7 +34,7 @@ class AgentRun(models.Model):
 
 class AgentMetadata(models.Model):
     metadata_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE, related_name="formData")
     key = models.CharField(max_length=255, null=False)
     value = models.TextField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -40,3 +42,4 @@ class AgentMetadata(models.Model):
 
     def __str__(self):
         return f"Metadata {self.metadata_id} for Agent {self.agent_id}"
+
